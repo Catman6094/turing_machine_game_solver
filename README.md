@@ -1,1 +1,1 @@
-# turing_machine_game_solver
+# Turing Machine Solver
