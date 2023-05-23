@@ -28,7 +28,14 @@ def is_good(puzzle):
     if len(solutions) > 0 and not any(redundant):
         return solutions[0]
     return False
-    
+
+
+def puzzle_iter(cards):
+    # Given criterion cards (lists of clues), loop through all puzzles (combinations of clues)
+    for p in product(*cards):
+        yield list(p)
+
+
 
 c1 = lambda a, b, c: a == 1 and b == 2 and c == 3
 c2 = lambda a, b, c: b == c
