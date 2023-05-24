@@ -1,9 +1,9 @@
 from itertools import product
 
-CODES = product(range(1, 6), repeat=3)
+CODES = list(product(range(1, 6), repeat=3))
 
 
-def is_good(puzzle):
+def solve(puzzle):
     redundant = [True] * len(puzzle)
     solutions = []
     for a, b, c in CODES:
@@ -33,10 +33,31 @@ def is_good(puzzle):
 def puzzle_iter(cards):
     # Given criterion cards (lists of clues), loop through all puzzles (combinations of clues)
     for p in product(*cards):
-        yield list(p)
+        p = list(p)
+        yield p
 
 
+def main():
+    cards = [
+        [
+            lambda a, b, c: a < 3,
+            lambda a, b, c: a == 3,
+            lambda a, b, c: a > 3
+        ], [
+            lambda a, b, c: c % 3 == 0,
+            lambda a, b, c: c % 3 == 1
+        ], [
+            lambda a, b, c: a < b and a < c,
+            lambda a, b, c: b < a and b < c,
+            lambda a, b, c: c < a and c < b
+        ], [
+            lambda a, b, c: [a, b, c].count(1) + [a, b, c].count(3) + [a, b, c].count(5) < [a, b, c].count(2) + [a, b, c].count(4),
+            lambda a, b, c: [a, b, c].count(1) + [a, b, c].count(3) + [a, b, c].count(5) > [a, b, c].count(2) + [a, b, c].count(4)
+        ]
+    ]
+    for puzzle, indices in zip(puzzle_iter(cards), product(*[range(len(c)) for c in cards])):
+        solution = solve(puzzle)
+        if solution: print(solution, indices)
 
-c1 = lambda a, b, c: a == 1 and b == 2 and c == 3
-c2 = lambda a, b, c: b == c
-print(is_good([c1, c2]))
+if __name__ == "__main__":
+    main()
